@@ -8,7 +8,11 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
+<<<<<<< HEAD
 set VIRTUAL_ENV=C:\Users\chldu\OneDrive\바탕 화면\HEARTSIGNAL\yeonseo
+=======
+set VIRTUAL_ENV=C:\Users\chldu\OneDrive\바탕 화면\HEARTSIGNAL\HeartSignal\yeonseo
+>>>>>>> 876d4b8 (Initial commit)
 
 if not defined PROMPT set PROMPT=$P$G
 

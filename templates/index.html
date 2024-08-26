@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Rate Monitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Heart Rate Monitor</h1>
+        <p id="heartbeat">Loading...</p>
+        <p id="warning" class="hidden">!주의! 안정을 취하세요</p>
+    </div>
+    <script>
+        function updateData() {
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    const heartbeat = data.heartbeat;
+                    document.getElementById('heartbeat').textContent = `심박도: ${heartbeat}`;
+                    const warning = document.getElementById('warning');
+                    if (heartbeat >= 110) {
+                        warning.classList.remove('hidden');
+                    } else {
+                        warning.classList.add('hidden');
+                    }
+                });
+        }
+
+        setInterval(updateData, 1000);
+    </script>
+</body>
+</html>
