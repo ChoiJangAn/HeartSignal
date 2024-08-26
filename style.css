@@ -1,0 +1,19 @@
+body {
+    background-color: pink;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: white;
+}
+
+.container {
+    padding: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+#warning {
+    color: red;
+    font-weight: bold;
+}
