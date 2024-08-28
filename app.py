@@ -1,11 +1,12 @@
 from flask import Flask, render_template, jsonify
-import logging  # 로깅 모듈을 추가합니다
+import logging
+import random
 import os
 
 app = Flask(__name__)
 
 # 로깅 설정
-logging.basicConfig(level=logging.DEBUG)  # 디버깅 수준으로 로깅 설정
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # 데이터 파일 경로 설정
 file_path = 'C:\\Users\\chldu\\OneDrive\\바탕 화면\\HEARTSIGNAL\\HeartSignal\\output.txt'
@@ -20,8 +21,11 @@ def read_data():
         try:
             with open(file_path, 'r') as file:
                 data_list = [line.strip() for line in file if line.strip().isdigit()]
+            logging.debug(f"파일에서 읽은 데이터: {data_list}")
         except Exception as e:
             logging.error(f"파일을 읽는 중 오류 발생: {e}")
+    else:
+        logging.error(f"파일을 찾을 수 없습니다: {file_path}")
 
 @app.route('/')
 def index():
@@ -36,7 +40,8 @@ def data():
         logging.debug(f"Returning heartbeat value: {heartbeat}")
         data_index = (data_index + 1) % len(data_list)
     else:
-        heartbeat = 80
+        heartbeat = random.randint(60, 100)  # 파일이 없거나 비어 있을 때 랜덤 값 반환
+        logging.debug(f"No data found. Returning random heartbeat value: {heartbeat}")
     
     return jsonify({'heartbeat': heartbeat})
 
