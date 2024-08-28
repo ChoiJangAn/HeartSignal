@@ -5,10 +5,11 @@ import time
 app = Flask(__name__)
 
 # 데이터 파일 경로 설정
-file_path = 'C:/Users/82109/Desktop/대학/3학년/여름학기/임베디드 소프트웨어 경진대회/output.txt'
+file_path = 'C:\\Users\\chldu\\OneDrive\\바탕 화면\\HEARTSIGNAL\\HeartSignal\\output.txt'
 
 # 데이터를 저장할 리스트 생성
 data_list = []
+data_index = 0  # 현재 데이터를 가리키는 인덱스
 
 def read_data():
     global data_list
@@ -22,11 +23,11 @@ def read_data():
 read_data()
 
 def generate_heartbeat():
-    global data_list
+    global data_index, data_list
     while True:
-        # 데이터를 읽어와서 새 데이터 리스트를 갱신
-        read_data()
-        time.sleep(1)  # 1초마다 업데이트
+        if data_list:
+            data_index = (data_index + 1) % len(data_list)  # 다음 데이터를 가리키도록 인덱스를 순환시킴
+        time.sleep(1)  # 1초마다 인덱스를 갱신
 
 @app.route('/')
 def index():
@@ -34,9 +35,10 @@ def index():
 
 @app.route('/data')
 def data():
-    # 마지막 데이터를 반환하거나 랜덤으로 생성 (비정상적으로 데이터를 제공)
+    global data_index
+    # 현재 인덱스의 데이터를 반환
     if data_list:
-        heartbeat = int(data_list[-1])  # 마지막 데이터를 반환
+        heartbeat = int(data_list[data_index])  # 인덱스에 해당하는 데이터를 반환
     else:
         heartbeat = 80  # 데이터가 없는 경우 기본값
     
