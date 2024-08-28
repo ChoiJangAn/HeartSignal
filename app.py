@@ -7,8 +7,9 @@ app = Flask(__name__)
 # 로깅 설정
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
+base_dir = os.path.dirname(os.path.abspath(__file__))
 # 데이터 파일 경로 설정
-file_path = 'C:\\Users\\chldu\\OneDrive\\바탕 화면\\HEARTSIGNAL\\HeartSignal\\output.txt'
+file_path = os.path.join(base_dir, 'output.txt')
 
 # 데이터를 저장할 리스트 생성
 data_list = []
