@@ -40,7 +40,7 @@ def data():
         logging.debug(f"Returning heartbeat value: {heartbeat}")
         data_index = (data_index + 1) % len(data_list)
     else:
-        heartbeat = random.randint(60, 100)  # 파일이 없거나 비어 있을 때 랜덤 값 반환
+        heartbeat = random.randint(70, 150)  # 랜덤 값을 70에서 150 사이로 변경
         logging.debug(f"No data found. Returning random heartbeat value: {heartbeat}")
     
     return jsonify({'heartbeat': heartbeat})
