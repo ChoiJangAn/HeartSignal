@@ -1,8 +1,8 @@
 body {
-    background-color: white; /* 배경색을 흰색으로 변경 */
-    font-family: 'Garamond', serif; /* 골져스 글씨체로 변경 */
+    background-color: white;
+    font-family: 'Times New Roman', serif; /* 유럽풍 글씨체 */
     text-align: center;
-    color: black; /* 글씨 색상을 검정색으로 변경 */
+    color: black;
 }
 
 .container {
@@ -18,8 +18,16 @@ body {
     font-weight: bold;
 }
 
-img.title-image {
-    vertical-align: middle;
-    width: 20%; /* 이미지를 원래 크기의 20%로 줄임 */
-    margin-left: 10px;
+/* 제목과 이미지를 담을 헤더 스타일 */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* 이미지 크기를 줄이는 스타일 */
+.header img {
+    width: 20%; /* 이미지 크기를 원래의 1/5로 줄입니다 */
+    height: auto;
 }
