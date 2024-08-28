@@ -1,8 +1,8 @@
 body {
-    background-color: pink;
-    font-family: Arial, sans-serif;
+    background-color: white; /* 배경색을 흰색으로 변경 */
+    font-family: 'Garamond', serif; /* 골져스 글씨체로 변경 */
     text-align: center;
-    color: white;
+    color: black; /* 글씨 색상을 검정색으로 변경 */
 }
 
 .container {
@@ -16,4 +16,10 @@ body {
 #warning {
     color: red;
     font-weight: bold;
+}
+
+img.title-image {
+    vertical-align: middle;
+    width: 20%; /* 이미지를 원래 크기의 20%로 줄임 */
+    margin-left: 10px;
 }
