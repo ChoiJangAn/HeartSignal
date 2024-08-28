@@ -1,6 +1,5 @@
 from flask import Flask, render_template, jsonify
 import logging
-import random
 import os
 
 app = Flask(__name__)
@@ -20,7 +19,8 @@ def read_data():
     if os.path.exists(file_path):
         try:
             with open(file_path, 'r') as file:
-                data_list = [line.strip() for line in file if line.strip().isdigit()]
+                # 데이터를 읽어 숫자인 경우에만 리스트에 추가하고, 3으로 나눔
+                data_list = [int(line.strip()) // 3 for line in file if line.strip().isdigit()]
             logging.debug(f"파일에서 읽은 데이터: {data_list}")
         except Exception as e:
             logging.error(f"파일을 읽는 중 오류 발생: {e}")
@@ -36,12 +36,12 @@ def data():
     global data_index
     read_data()
     if data_list:
-        heartbeat = int(data_list[data_index])
+        heartbeat = data_list[data_index]
         logging.debug(f"Returning heartbeat value: {heartbeat}")
         data_index = (data_index + 1) % len(data_list)
     else:
-        heartbeat = random.randint(70, 150)  # 랜덤 값을 70에서 150 사이로 변경
-        logging.debug(f"No data found. Returning random heartbeat value: {heartbeat}")
+        heartbeat = 80  # 데이터가 없는 경우 기본값 80
+        logging.debug(f"No data found. Returning default heartbeat value: {heartbeat}")
     
     return jsonify({'heartbeat': heartbeat})
 
