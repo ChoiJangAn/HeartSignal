@@ -8,14 +8,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>
-            Heart Rate Monitor
-            <img src="https://search.pstatic.net/sunny/?src=https%3A%2F%2Fimage.aladin.co.kr%2Fimg%2Fimg_content%2FK682636237_04.jpg&type=sc960_832" 
-                 alt="Title Image" 
-                 class="title-image">
-        </h1>
+        <div class="header">
+            <h1>Heart Rate Monitor</h1>
+            <img src="https://search.pstatic.net/sunny/?src=https%3A%2F%2Fimage.aladin.co.kr%2Fimg%2Fimg_content%2FK682636237_04.jpg&type=sc960_832" alt="Heart Image">
+        </div>
         <p id="heartbeat">Loading...</p>
-        <p id="warning" class="hidden">!주의! 안정을 취하세요</p>
+        <p id="warning" class="hidden">! 주의 ! 안정을 취하세요</p>
     </div>
     <script>
         function updateData() {
@@ -26,16 +24,16 @@
                     document.getElementById('heartbeat').textContent = `심박도: ${heartbeat}`;
                     const warning = document.getElementById('warning');
                     
-                    // 현재 상태를 확인하고 필요할 때만 클래스 추가/제거
-                    if (heartbeat >= 110 && warning.classList.contains('hidden')) {
+                    // 심박수가 110 이상일 경우 경고 메시지 표시
+                    if (heartbeat >= 110) {
                         warning.classList.remove('hidden');
-                    } else if (heartbeat < 110 && !warning.classList.contains('hidden')) {
+                    } else {
                         warning.classList.add('hidden');
                     }
                 });
         }
 
-        setInterval(updateData, 1000);
+        setInterval(updateData, 1000);  // 1초마다 데이터를 갱신
     </script>
 </body>
 </html>
