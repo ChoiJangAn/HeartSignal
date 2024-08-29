@@ -1,19 +1,32 @@
-import os
-import serial
-import logging
 from flask import Flask, render_template, jsonify
+import logging
+import os
 
 app = Flask(__name__)
+
+# 로깅 설정
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# 환경 변수로 시리얼 포트 설정
-ser = None
-if os.getenv('FLASK_ENV') == 'development':
-    try:
-        ser = serial.Serial('COM7', 9600)
-        logging.info("시리얼 포트 COM7 연결 성공")
-    except Exception as e:
-        logging.error(f"시리얼 포트 연결 오류: {e}")
+base_dir = os.path.dirname(os.path.abspath(__file__))
+# 데이터 파일 경로 설정
+file_path = os.path.join(base_dir, 'output.txt')
+
+# 데이터를 저장할 리스트 생성
+data_list = []
+data_index = 0  # 현재 데이터를 가리키는 인덱스
+
+def read_data():
+    global data_list
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, 'r') as file:
+                # 데이터를 읽어 숫자인 경우에만 리스트에 추가하고, 3으로 나눔
+                data_list = [int(line.strip()) // 3 for line in file if line.strip().isdigit()]
+            logging.debug(f"파일에서 읽은 데이터: {data_list}")
+        except Exception as e:
+            logging.error(f"파일을 읽는 중 오류 발생: {e}")
+    else:
+        logging.error(f"파일을 찾을 수 없습니다: {file_path}")
 
 @app.route('/')
 def index():
@@ -21,22 +34,16 @@ def index():
 
 @app.route('/data')
 def data():
-    heartbeat = 'error'  # 기본값을 '!'로 설정
-
-    if ser:
-        try:
-            if ser.in_waiting > 0:
-                line = ser.readline().decode('utf-8').strip()
-                logging.debug(f"시리얼에서 읽은 데이터: {line}")
-
-                if line.isdigit():  # 숫자인 경우만 심박도로 처리
-                    heartbeat = int(line) // 3
-                else:
-                    heartbeat = '!'  # 리드 오프 상태를 나타냄
-
-        except Exception as e:
-            logging.error(f"시리얼 통신 오류: {e}")
-
+    global data_index
+    read_data()
+    if data_list:
+        heartbeat = data_list[data_index]
+        logging.debug(f"Returning heartbeat value: {heartbeat}")
+        data_index = (data_index + 1) % len(data_list)
+    else:
+        heartbeat = 80  # 데이터가 없는 경우 기본값 80
+        logging.debug(f"No data found. Returning default heartbeat value: {heartbeat}")
+    
     return jsonify({'heartbeat': heartbeat})
 
 if __name__ == '__main__':
