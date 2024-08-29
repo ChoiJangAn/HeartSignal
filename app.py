@@ -1,23 +1,43 @@
 import serial
-import requests
-import time
+import logging
+from flask import Flask, render_template, jsonify
 
-# Serial 포트와 Baud Rate 설정
-ser = serial.Serial('COM4', 9600)  # COM 포트는 실제 포트에 맞게 조정해야 합니다.
+app = Flask(__name__)
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
-while True:
-    try:
-        # Serial 데이터 읽기
-        line = ser.readline().decode('utf-8').strip()
-        bpm = int(line)
+ser = None
 
-        # Flask 서버에 데이터 전송
-        response = requests.post('http://127.0.0.1:5000/update_bpm', json={'bpm': bpm})
-        
-        # 서버 응답 확인
-        print(response.json())
+try:
+    ser = serial.Serial('COM4', 9600)
+    logging.info("시리얼 포트 COM4 연결 성공")
+except PermissionError as e:
+    logging.error(f"시리얼 포트 연결 오류: {e}")
+except Exception as e:
+    logging.error(f"기타 시리얼 포트 오류: {e}")
 
-    except Exception as e:
-        print(f"Error: {e}")
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-    time.sleep(1)  # Adjust the sleep time if needed
+@app.route('/data')
+def data():
+    heartbeat = '!'  # 기본값을 '!'로 설정
+
+    if ser:
+        try:
+            if ser.in_waiting > 0:
+                line = ser.readline().decode('utf-8').strip()
+                logging.debug(f"시리얼에서 읽은 데이터: {line}")
+
+                if line.isdigit():  # 숫자인 경우만 심박도로 처리
+                    heartbeat = int(line) // 3
+                else:
+                    heartbeat = '!'  # 리드 오프 상태를 나타냄
+
+        except Exception as e:
+            logging.error(f"시리얼 통신 오류: {e}")
+
+    return jsonify({'heartbeat': heartbeat})
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000, debug=True)
