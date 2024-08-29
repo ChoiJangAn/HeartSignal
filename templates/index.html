@@ -13,7 +13,7 @@
             <img src="https://search.pstatic.net/sunny/?src=https%3A%2F%2Fimage.aladin.co.kr%2Fimg%2Fimg_content%2FK682636237_04.jpg&type=sc960_832" alt="Heart Image">
         </div>
         <p id="heartbeat">Loading...</p>
-        <p id="warning" class="hidden">! 주의 ! 안정을 취하세요</p>
+        <p id="warning" class="hidden">! 주의 ! 리드가 제대로 연결되지 않았습니다.</p>
     </div>
     <script>
         function updateData() {
@@ -21,13 +21,14 @@
                 .then(response => response.json())
                 .then(data => {
                     const heartbeat = data.heartbeat;
-                    document.getElementById('heartbeat').textContent = `심박도: ${heartbeat}`;
+                    const heartbeatElement = document.getElementById('heartbeat');
                     const warning = document.getElementById('warning');
-                    
-                    // 심박수가 110 이상일 경우 경고 메시지 표시
-                    if (heartbeat >= 110) {
+
+                    if (heartbeat === '!') {
+                        heartbeatElement.textContent = '심박수: 데이터 없음';
                         warning.classList.remove('hidden');
                     } else {
+                        heartbeatElement.textContent = `심박수: ${heartbeat}`;
                         warning.classList.add('hidden');
                     }
                 });
