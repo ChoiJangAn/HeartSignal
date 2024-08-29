@@ -7,14 +7,13 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # 환경 변수로 시리얼 포트 설정
+ser = None
 if os.getenv('FLASK_ENV') == 'development':
     try:
         ser = serial.Serial('COM7', 9600)
+        logging.info("시리얼 포트 COM7 연결 성공")
     except Exception as e:
         logging.error(f"시리얼 포트 연결 오류: {e}")
-        ser = None
-else:
-    ser = None  # 배포 환경에서는 시리얼 포트를 사용하지 않음
 
 @app.route('/')
 def index():
@@ -22,7 +21,7 @@ def index():
 
 @app.route('/data')
 def data():
-    heartbeat = '!'  # 기본값을 '!'로 설정
+    heartbeat = 'error'  # 기본값을 '!'로 설정
 
     if ser:
         try:
