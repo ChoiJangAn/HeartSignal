@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">HS</string>
+    <string name="title_activity_main">HS</string>
+    <string name="package_name">com.jisu.hsapp</string>
+    <string name="custom_url_scheme">com.jisu.hsapp</string>
+</resources>
