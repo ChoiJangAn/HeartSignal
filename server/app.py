@@ -1,11 +1,11 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, send_from_directory, jsonify
 import logging
 import os
 
 # 시리얼 통신 관련 모듈
 import serial
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../client/build')
 
 # 로깅 설정
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -53,8 +53,12 @@ def read_data():
         logging.error(f"파일을 찾을 수 없습니다: {file_path}")
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def serve_frontend():
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/<path:path>')
+def serve_static_files(path):
+    return send_from_directory(app.static_folder, path)
 
 @app.route('/data')
 def data():
